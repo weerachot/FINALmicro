@@ -1,0 +1,702 @@
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 1
+
+
+
+
+
+       MCS-51 Family Macro Assembler   A S E M - 5 1   V 1.3
+       =====================================================
+
+
+
+	Source File:	C:\Users\User\OneDrive\เอกสาร\microl\MicroLabFinal-main\01 S\S2\ASM_Dot8x8\Dot8X8.Asm
+	Object File:	C:\Users\User\OneDrive\เอกสาร\microl\MicroLabFinal-main\01 S\S2\ASM_Dot8x8\Dot8X8.hex
+	List File:	C:\Users\User\OneDrive\เอกสาร\microl\MicroLabFinal-main\01 S\S2\ASM_Dot8x8\Dot8X8.lst
+
+
+
+ Line  I  Addr  Code            Source
+
+    1:
+    2:		N      00C8	T2CON		EQU	0C8H
+    3:		N      00CA	RCAP2L		EQU	0CAH
+    4:		N      00CB	RCAP2H		EQU	0CBH
+    5:		D      00A0	PORTSEG		EQU	P2
+    6:
+    7:		N      0020	DataBuffer	EQU	20H	;8Byte Buffer
+    8:
+    9:		B      0090	MxBoard_DIN	EQU	P1.0
+   10:		B      0091	MxBoard_CS	EQU	P1.1
+   11:		B      0092	MxBoard_CLK	EQU	P1.2
+   12:
+   13:		B      00B7	PortO_LEDGreen	EQU	P3.7
+   14:
+   15:		N      0000			ORG	0000H
+   16:	  0000	21 00				JMP	0100H
+   17:
+   18:		N      0100			ORG	0100H
+   19:	  0100	75 81 3F			MOV	SP,#3FH
+   20:	  0103	C2 AF				CLR	EA
+   21:	  0105	12 02 3B			CALL	Delay_250M
+   22:	  0108	12 03 3A			CALL	Initial_Max7219
+   23:	  010B	12 02 68			CALL	Initial_Serial
+   24:
+   25:	  010E			Main_Loop:
+   26:	  010E	C3				CLR	C
+   27:	  010F	12 02 D8			CALL	RX_BYTE
+   28:						;INC	A
+   29:	  0112			S0:
+   30:	  0112	B4 30 0D			CJNE	A,#'0',S1
+   31:	  0115	90 04 02			MOV	DPTR,#TB_00
+   32:	  0118	12 02 E6			CALL	Send_2_Dot
+   33:	  011B	74 3F				MOV	A,#03FH
+   34:	  011D	F4				CPL	A
+   35:	  011E	F5 A0				MOV	PORTSEG,A
+   36:	  0120	80 EC				JMP	Main_Loop
+   37:	  0122			S1:
+   38:	  0122	B4 31 0D			CJNE	A,#'1',S2
+   39:	  0125	90 04 0A			MOV	DPTR,#TB_01
+   40:	  0128	12 02 E6			CALL	Send_2_Dot
+   41:	  012B	74 06				MOV	A,#006H
+   42:	  012D	F4				CPL	A
+   43:	  012E	F5 A0				MOV	PORTSEG,A
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 2
+
+
+
+ Line  I  Addr  Code            Source
+
+   44:	  0130	80 DC				JMP	Main_Loop
+   45:	  0132			S2:
+   46:	  0132	B4 32 0D			CJNE	A,#'2',S3
+   47:	  0135	90 04 12			MOV	DPTR,#TB_02
+   48:	  0138	12 02 E6			CALL	Send_2_Dot
+   49:	  013B	74 5B				MOV	A,#05BH
+   50:	  013D	F4				CPL	A
+   51:	  013E	F5 A0				MOV	PORTSEG,A
+   52:	  0140	80 CC				JMP	Main_Loop
+   53:	  0142			S3:
+   54:	  0142	B4 33 0D			CJNE	A,#'3',S4
+   55:	  0145	90 04 1A			MOV	DPTR,#TB_03
+   56:	  0148	12 02 E6			CALL	Send_2_Dot
+   57:	  014B	74 4F				MOV	A,#04FH
+   58:	  014D	F4				CPL	A
+   59:	  014E	F5 A0				MOV	PORTSEG,A
+   60:	  0150	80 BC				JMP	Main_Loop
+   61:	  0152			S4:
+   62:	  0152	B4 34 0D			CJNE	A,#'4',S5
+   63:	  0155	90 04 22			MOV	DPTR,#TB_04
+   64:	  0158	12 02 E6			CALL	Send_2_Dot
+   65:	  015B	74 66				MOV	A,#066H
+   66:	  015D	F4				CPL	A
+   67:	  015E	F5 A0				MOV	PORTSEG,A
+   68:	  0160	80 AC				JMP	Main_Loop
+   69:	  0162			S5:
+   70:	  0162	B4 35 0D			CJNE	A,#'5',S6
+   71:	  0165	90 04 2A			MOV	DPTR,#TB_05
+   72:	  0168	12 02 E6			CALL	Send_2_Dot
+   73:	  016B	74 6D				MOV	A,#06DH
+   74:	  016D	F4				CPL	A
+   75:	  016E	F5 A0				MOV	PORTSEG,A
+   76:	  0170	80 9C				JMP	Main_Loop
+   77:	  0172			S6:
+   78:	  0172	B4 36 0D			CJNE	A,#'6',S7
+   79:	  0175	90 04 32			MOV	DPTR,#TB_06
+   80:	  0178	12 02 E6			CALL	Send_2_Dot
+   81:	  017B	74 7D				MOV	A,#07DH
+   82:	  017D	F4				CPL	A
+   83:	  017E	F5 A0				MOV	PORTSEG,A
+   84:	  0180	80 8C				JMP	Main_Loop
+   85:	  0182			S7:
+   86:	  0182	B4 37 0D			CJNE	A,#'7',S8
+   87:	  0185	90 04 3A			MOV	DPTR,#TB_07
+   88:	  0188	12 02 E6			CALL	Send_2_Dot
+   89:	  018B	74 07				MOV	A,#007H
+   90:	  018D	F4				CPL	A
+   91:	  018E	F5 A0				MOV	PORTSEG,A
+   92:	  0190	21 0E				JMP	Main_Loop
+   93:	  0192			S8:
+   94:	  0192	B4 38 0D			CJNE	A,#'8',S9
+   95:	  0195	90 04 42			MOV	DPTR,#TB_08
+   96:	  0198	12 02 E6			CALL	Send_2_Dot
+   97:	  019B	74 7F				MOV	A,#07FH
+   98:	  019D	F4				CPL	A
+   99:	  019E	F5 A0				MOV	PORTSEG,A
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 3
+
+
+
+ Line  I  Addr  Code            Source
+
+  100:	  01A0	21 0E				JMP	Main_Loop
+  101:	  01A2			S9:
+  102:	  01A2	B4 39 0D			CJNE	A,#'9',SA
+  103:	  01A5	90 04 4A			MOV	DPTR,#TB_09
+  104:	  01A8	12 02 E6			CALL	Send_2_Dot
+  105:	  01AB	74 6F				MOV	A,#06FH
+  106:	  01AD	F4				CPL	A
+  107:	  01AE	F5 A0				MOV	PORTSEG,A
+  108:	  01B0	21 0E				JMP	Main_Loop
+  109:	  01B2			SA:
+  110:	  01B2	B4 41 0D			CJNE	A,#'A',SB
+  111:	  01B5	90 04 52			MOV	DPTR,#TB_0A
+  112:	  01B8	12 02 E6			CALL	Send_2_Dot
+  113:	  01BB	74 77				MOV	A,#077H
+  114:	  01BD	F4				CPL	A
+  115:	  01BE	F5 A0				MOV	PORTSEG,A
+  116:	  01C0	21 0E				JMP	Main_Loop
+  117:	  01C2			SB:
+  118:	  01C2	B4 42 0D			CJNE	A,#'B',SC
+  119:	  01C5	90 04 5A			MOV	DPTR,#TB_0B
+  120:	  01C8	12 02 E6			CALL	Send_2_Dot
+  121:	  01CB	74 7C				MOV	A,#07CH
+  122:	  01CD	F4				CPL	A
+  123:	  01CE	F5 A0				MOV	PORTSEG,A
+  124:	  01D0	21 0E				JMP	Main_Loop
+  125:	  01D2			SC:
+  126:	  01D2	B4 43 0D			CJNE	A,#'C',SD
+  127:	  01D5	90 04 62			MOV	DPTR,#TB_0C
+  128:	  01D8	12 02 E6			CALL	Send_2_Dot
+  129:	  01DB	74 39				MOV	A,#039H
+  130:	  01DD	F4				CPL	A
+  131:	  01DE	F5 A0				MOV	PORTSEG,A
+  132:	  01E0	21 0E				JMP	Main_Loop
+  133:	  01E2			SD:
+  134:	  01E2	B4 44 0D			CJNE	A,#'D',SE
+  135:	  01E5	90 04 6A			MOV	DPTR,#TB_0D
+  136:	  01E8	12 02 E6			CALL	Send_2_Dot
+  137:	  01EB	74 5E				MOV	A,#05EH
+  138:	  01ED	F4				CPL	A
+  139:	  01EE	F5 A0				MOV	PORTSEG,A
+  140:	  01F0	21 0E				JMP	Main_Loop
+  141:	  01F2			SE:
+  142:	  01F2	B4 45 0D			CJNE	A,#'E',SF
+  143:	  01F5	90 04 72			MOV	DPTR,#TB_0E
+  144:	  01F8	12 02 E6			CALL	Send_2_Dot
+  145:	  01FB	74 79				MOV	A,#079H
+  146:	  01FD	F4				CPL	A
+  147:	  01FE	F5 A0				MOV	PORTSEG,A
+  148:	  0200	21 0E				JMP	Main_Loop
+  149:	  0202			SF:
+  150:	  0202	B4 46 0D			CJNE	A,#'F',SOO
+  151:	  0205	90 04 7A			MOV	DPTR,#TB_0F
+  152:	  0208	12 02 E6			CALL	Send_2_Dot
+  153:	  020B	74 71				MOV	A,#071H
+  154:	  020D	F4				CPL	A
+  155:	  020E	F5 A0				MOV	PORTSEG,A
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 4
+
+
+
+ Line  I  Addr  Code            Source
+
+  156:	  0210	21 0E				JMP	Main_Loop
+  157:	  0212			SOO:
+  158:	  0212	90 03 FA			MOV	DPTR,#SBB
+  159:	  0215	12 02 E6			CALL	Send_2_Dot
+  160:	  0218	74 00				MOV	A,#00H
+  161:	  021A	F4				CPL	A
+  162:	  021B	F5 A0				MOV	PORTSEG,A
+  163:	  021D	21 0E				JMP	Main_Loop
+  164:
+  165:				$INCLUDE (myDelay.A51)
+  166: 1
+  167: 1			;############################################
+  168: 1			;#************************************************
+  169: 1			;#      All Delay for XTAL 18.432MHz 12Clk/MC
+  170: 1			;#************************************************
+  171: 1  021F	C0 07		DELAY_4SEC:	PUSH	07H	; Delay 80*50MilliSec
+  172: 1  0221	7F 50				MOV	R7,#80	;  = 4000MilliSec
+  173: 1  0223	02 02 50			JMP	_DELAY_50M
+  174: 1
+  175: 1  0226	C0 07		DELAY_2SEC:	PUSH	07H	; Delay 40*50MilliSec
+  176: 1  0228	7F 28				MOV	R7,#40	;  = 2000MilliSec
+  177: 1  022A	02 02 50			JMP	_DELAY_50M
+  178: 1
+  179: 1  022D	C0 07		DELAY_1SEC:	PUSH	07H	; Delay 20*50MilliSec
+  180: 1  022F	7F 14				MOV	R7,#20	;  = 1000MilliSec
+  181: 1  0231	02 02 50			JMP	_DELAY_50M
+  182: 1
+  183: 1  0234	C0 07		DELAY_500M:	PUSH	07H	; Delay 10*50MilliSec
+  184: 1  0236	7F 0A				MOV	R7,#10	;  = 500MilliSec
+  185: 1  0238	02 02 50			JMP	_DELAY_50M
+  186: 1
+  187: 1  023B	C0 07		DELAY_250M:	PUSH	07H	; Delay 5*50 MilliSec
+  188: 1  023D	7F 05				MOV	R7,#5	;  = 250 MilliSec
+  189: 1  023F	02 02 50			JMP	_DELAY_50M
+  190: 1
+  191: 1  0242	C0 07		DELAY_100M:	PUSH	07H	; Delay 2*50 MilliSec
+  192: 1  0244	7F 02				MOV	R7,#2	;  = 100 MilliSec
+  193: 1  0246	02 02 50			JMP	_DELAY_50M
+  194: 1
+  195: 1  0249	C0 07		DELAY_50M:	PUSH	07H	; Delay 1*50 MilliSec
+  196: 1  024B	7F 01				MOV	R7,#1	;  = 50 MilliSec
+  197: 1  024D	02 02 50			JMP	_DELAY_50M
+  198: 1
+  199: 1
+  200: 1  0250	C0 E0		_DELAY_50M:	PUSH	Acc
+  201: 1  0252	C0 F0				PUSH	B
+  202: 1  0254	75 F0 C8	_DELAY_050M:	MOV	B,#200	; Delay 50 MilliSec
+  203: 1  0257	74 72		_DELAY_250U:	MOV	A,#114	; 1MC ,250 uSec
+  204: 1  0259	D5 E0 FD			DJNZ	Acc,$	; 2MC ,(192-1)*0.651*2 = 250 uSec
+  205: 1  025C	D5 F0 F8			DJNZ	B,_DELAY_250U 	; 250*200=50mS
+  206: 1  025F	DF F3				DJNZ	R7,_DELAY_050M	; 50*5 =250mS
+  207: 1  0261	D0 F0				POP	B
+  208: 1  0263	D0 E0				POP	Acc
+  209: 1  0265	D0 07				POP	07H
+  210: 1  0267	22				RET
+  211:				$INCLUDE (mySerial.A51)
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 5
+
+
+
+ Line  I  Addr  Code            Source
+
+  212: 1
+  213: 1			;============  Initial Serial Port   ============
+  214: 1  0268	75 89 20	Initial_Serial:	MOV	TMOD,#00100000B	; T1M2 T0M1
+  215: 1  026B	75 98 50			MOV	SCON,#01010000B	; Serial Mode1
+  216: 1  026E	75 8D FD			MOV	TH1,#-3	; 9600 FDH@18.432MHz
+  217: 1  0271	74 00				MOV	A,#00H 	; FBH@18.432MHz
+  218: 1  0273	F5 87				MOV	PCON,A	; SMOD = 0
+  219: 1  0275	C2 AF				CLR	EA	; Disable All
+  220: 1  0277	D2 8E				SETB	TR1	; Start Timer1
+  221: 1  0279	22				RET
+  222: 1
+  223: 1			;==========  Send Data to Serial Port   ==========
+  224: 1  027A	C0 E0		SEND_2HEX:	PUSH	Acc
+  225: 1  027C	C4				SWAP	A
+  226: 1  027D	12 02 82			CALL	SEND_1HEX
+  227: 1  0280	D0 E0				POP	Acc
+  228: 1  0282	C0 83		SEND_1HEX:	PUSH	DPH
+  229: 1  0284	C0 82				PUSH	DPL
+  230: 1  0286	90 02 A0			MOV	DPTR,#HEXASC_TAB
+  231: 1  0289	54 0F				ANL	A,#0FH
+  232: 1  028B	93				MOVC	A,@A+DPTR
+  233: 1  028C	D0 82				POP	DPL
+  234: 1  028E	D0 83				POP	DPH
+  235: 1  0290	C0 A8		SEND_ASCII:	PUSH	IE
+  236: 1  0292	C2 AC				CLR	ES
+  237: 1  0294	C2 99				CLR    	TI
+  238: 1  0296	F5 99				MOV    	SBUF,A
+  239: 1  0298	30 99 FD			JNB    	TI,$
+  240: 1  029B	C2 99				CLR    	TI
+  241: 1  029D	D0 A8				POP	IE
+  242: 1  029F	22				RET
+  243: 1  02A0	30 31 32 33	HEXASC_TAB: 	DB	'0123456789ABCDEF'
+       1  02A4	34 35 36 37
+       1  02A8	38 39 41 42
+       1  02AC	43 44 45 46
+  244: 1
+  245: 1			;=========   Send Line Feed =================
+  246: 1  02B0	74 0D		Send_LineFeed:	MOV	A,#0DH
+  247: 1  02B2	51 90				CALL	Send_ASCII
+  248: 1  02B4	74 0A				MOV	A,#0AH
+  249: 1  02B6	51 90				CALL	Send_ASCII
+  250: 1  02B8	22				RET
+  251: 1
+  252: 1			;========  Send Line Feed ==================
+  253: 1  02B9	74 0C		Send_ClrScr:	MOV	A,#0CH
+  254: 1  02BB	51 90				CALL	Send_ASCII
+  255: 1  02BD	22				RET
+  256: 1
+  257: 1			;== Send Data Table to Serial Start@DPTR to '00H' =
+  258: 1  02BE	E4		Send_Table:	CLR	A
+  259: 1  02BF	93				MOVC	A,@A+DPTR
+  260: 1  02C0	60 05				JZ	_X_Send_Tab
+  261: 1  02C2	51 90				CALL	SEND_ASCII
+  262: 1  02C4	A3				INC	DPTR
+  263: 1  02C5	80 F7				JMP	Send_Table
+  264: 1  02C7	22		_X_Send_Tab:	RET
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 6
+
+
+
+ Line  I  Addr  Code            Source
+
+  265: 1
+  266: 1			;========= Send 1-Byte@Acc to SERIAL =========
+  267: 1  02C8	C0 A8		TX_BYTE:	PUSH	IE
+  268: 1  02CA	C2 AC				CLR	ES
+  269: 1  02CC	C2 99				CLR	TI
+  270: 1  02CE	F5 99				MOV	SBUF,A
+  271: 1  02D0	30 99 FD			JNB	TI,$
+  272: 1  02D3	C2 99				CLR	TI
+  273: 1  02D5	D0 A8				POP	IE
+  274: 1  02D7	22				RET
+  275: 1
+  276: 1			;====== Receive Data From SERIAL to Acc ========
+  277: 1  02D8	C0 A8		RX_BYTE:	PUSH	IE
+  278: 1  02DA	C2 AC				CLR	ES
+  279: 1  02DC	30 98 FD			JNB	RI,$	; Wait data
+  280: 1  02DF	C2 98				CLR	RI
+  281: 1  02E1	E5 99				MOV	A,SBUF
+  282: 1  02E3	D0 A8				POP	IE
+  283: 1  02E5	22				RET
+  284:				$INCLUDE (myMaxDot.A51)
+  285: 1
+  286: 1  02E6			Send_2_Dot:
+  287: 1  02E6	78 21			MOV	R0,#DataBuffer+1
+  288: 1  02E8	7F 08			MOV	R7,#8
+  289: 1  02EA			_ReadBuffer:
+  290: 1  02EA	E4			CLR	A
+  291: 1  02EB	93			MOVC	A,@A+DPTR
+  292: 1  02EC	F6			MOV	@R0,A
+  293: 1  02ED	08			INC	R0
+  294: 1  02EE	A3			INC	DPTR
+  295: 1  02EF	DF F9			DJNZ	R7,_ReadBuffer
+  296: 1
+  297: 1  02F1			_Send_2_Max7219:
+  298: 1  02F1	75 83 01		MOV	DPH,#1
+  299: 1  02F4	85 21 82		MOV	DPL,DataBuffer+1
+  300: 1  02F7	12 03 69		CALL	Send_DPTR2MAX7219
+  301: 1  02FA	75 83 02		MOV	DPH,#2
+  302: 1  02FD	85 22 82		MOV	DPL,DataBuffer+2
+  303: 1  0300	12 03 69		CALL	Send_DPTR2MAX7219
+  304: 1  0303	75 83 03		MOV	DPH,#3
+  305: 1  0306	85 23 82		MOV	DPL,DataBuffer+3
+  306: 1  0309	12 03 69		CALL	Send_DPTR2MAX7219
+  307: 1  030C	75 83 04		MOV	DPH,#4
+  308: 1  030F	85 24 82		MOV	DPL,DataBuffer+4
+  309: 1  0312	12 03 69		CALL	Send_DPTR2MAX7219
+  310: 1
+  311: 1  0315	75 83 05		MOV	DPH,#5
+  312: 1  0318	85 25 82		MOV	DPL,DataBuffer+5
+  313: 1  031B	12 03 69		CALL	Send_DPTR2MAX7219
+  314: 1  031E	75 83 06		MOV	DPH,#6
+  315: 1  0321	85 26 82		MOV	DPL,DataBuffer+6
+  316: 1  0324	12 03 69		CALL	Send_DPTR2MAX7219
+  317: 1  0327	75 83 07		MOV	DPH,#7
+  318: 1  032A	85 27 82		MOV	DPL,DataBuffer+7
+  319: 1  032D	12 03 69		CALL	Send_DPTR2MAX7219
+  320: 1  0330	75 83 08		MOV	DPH,#8
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 7
+
+
+
+ Line  I  Addr  Code            Source
+
+  321: 1  0333	85 28 82		MOV	DPL,DataBuffer+8
+  322: 1  0336	12 03 69		CALL	Send_DPTR2MAX7219
+  323: 1
+  324: 1  0339	22			RET
+  325: 1
+  326: 1
+  327: 1  033A			Initial_Max7219:
+  328: 1  033A	90 0B 07		MOV	DPTR,#0B07H; // B=Scan {0-7 Position}
+  329: 1  033D	12 03 69		CALL	Send_DPTR2MAX7219
+  330: 1  0340	90 09 00		MOV	DPTR,#0900H; // 9=Mode {00=NoCode,ff=code}
+  331: 1  0343	12 03 69	       	CALL	Send_DPTR2MAX7219
+  332: 1  0346	90 0F 00		MOV	DPTR,#0F00H; // F=Test {0,1}
+  333: 1  0349	12 03 69	       	CALL	Send_DPTR2MAX7219
+  334: 1  034C	90 0A 08		MOV	DPTR,#0A08H; // A=Intensity = 8/15
+  335: 1  034F	12 03 69	       	CALL	Send_DPTR2MAX7219
+  336: 1  0352	90 0C 01		MOV	DPTR,#0C01H; // c=shutdown {0,1}
+  337: 1  0355	12 03 69	        CALL	Send_DPTR2MAX7219
+  338: 1  0358	22			RET
+  339: 1
+  340: 1  0359			MAX7219_Display_Test:
+  341: 1  0359	90 0F 01		MOV	DPTR,#0F01H		;0F01 : Display Test
+  342: 1  035C	12 03 69		CALL	Send_DPTR2MAX7219
+  343: 1  035F	12 03 EC		CALL	myDelay
+  344: 1  0362	90 0F 00		MOV	DPTR,#0F00H		;0F00 : Display Normal
+  345: 1  0365	12 03 69		CALL	Send_DPTR2MAX7219
+  346: 1  0368	22			RET
+  347: 1
+  348: 1  0369			Send_DPTR2MAX7219:
+  349: 1  0369	D2 90			SETB	MxBoard_DIN
+  350: 1  036B	D2 92			SETB	MxBoard_CLK
+  351: 1  036D	C2 91			CLR	MxBoard_CS
+  352: 1  036F	00 00 00 00		DB	0,0,0,0,0,0,0,0,0,0,0,0
+       1  0373	00 00 00 00
+       1  0377	00 00 00 00
+  353: 1  037B	00 00 00 00		DB	0,0,0,0,0,0,0,0,0,0,0,0
+       1  037F	00 00 00 00
+       1  0383	00 00 00 00
+  354: 1  0387	E5 83			MOV	A,DPH
+  355: 1  0389	12 03 B0		CALL	_Send_DPTR2MAX7219_8Bit
+  356: 1  038C	E5 82			MOV	A,DPL
+  357: 1  038E	12 03 B0		CALL	_Send_DPTR2MAX7219_8Bit
+  358: 1  0391	00 00 00 00		DB	0,0,0,0,0,0,0,0,0,0,0,0
+       1  0395	00 00 00 00
+       1  0399	00 00 00 00
+  359: 1  039D	00 00 00 00		DB	0,0,0,0,0,0,0,0,0,0,0,0
+       1  03A1	00 00 00 00
+       1  03A5	00 00 00 00
+  360: 1  03A9	D2 90			SETB	MxBoard_DIN
+  361: 1  03AB	D2 92			SETB	MxBoard_CLK
+  362: 1  03AD	D2 91			SETB	MxBoard_CS
+  363: 1  03AF	22			RET
+  364: 1
+  365: 1  03B0			_Send_DPTR2MAX7219_8Bit:
+  366: 1  03B0	7F 08			MOV	R7,#8
+  367: 1  03B2			_ShiftBit_DPTR2MAX7219:
+  368: 1  03B2	33			RLC	A
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 8
+
+
+
+ Line  I  Addr  Code            Source
+
+  369: 1  03B3	92 90			MOV	MxBoard_DIN,C
+  370: 1  03B5	00 00 00 00		DB	0,0,0,0,0,0,0,0,0,0,0,0
+       1  03B9	00 00 00 00
+       1  03BD	00 00 00 00
+  371: 1  03C1	00 00 00 00		DB	0,0,0,0,0,0,0,0,0,0,0,0
+       1  03C5	00 00 00 00
+       1  03C9	00 00 00 00
+  372: 1  03CD	C2 92			CLR	MxBoard_CLK
+  373: 1  03CF	00 00 00 00		DB	0,0,0,0,0,0,0,0,0,0,0,0
+       1  03D3	00 00 00 00
+       1  03D7	00 00 00 00
+  374: 1  03DB	00 00 00 00		DB	0,0,0,0,0,0,0,0,0,0,0,0
+       1  03DF	00 00 00 00
+       1  03E3	00 00 00 00
+  375: 1  03E7	D2 92			SETB	MxBoard_CLK
+  376: 1  03E9	DF C7			DJNZ	R7,_ShiftBit_DPTR2MAX7219
+  377: 1  03EB	22			RET
+  378: 1
+  379: 1  03EC	E4		myDelay:CLR	A
+  380: 1  03ED	F5 F0			MOV	B,A
+  381: 1  03EF	7F 05			MOV	R7,#5
+  382: 1  03F1	D5 E0 FD	_DLY00:	DJNZ	Acc,_DLY00
+  383: 1  03F4	D5 F0 FA		DJNZ	B,_DLY00
+  384: 1  03F7	DF F8			DJNZ	R7,_DLY00
+  385: 1  03F9	22			RET
+  386:
+  387:
+  388:	  03FA	00 00 00 00	SBB:		DB	000H,000H,000H,000H,000H,000H,000H,000H
+	  03FE	00 00 00 00
+  389:	  0402	3C 42 46 4A	TB_00:		DB	03CH,042H,046H,04AH,052H,062H,042H,03CH
+	  0406	52 62 42 3C
+  390:	  040A	00 18 38 38	TB_01:		DB	000H,018H,038H,038H,018H,018H,018H,03CH
+	  040E	18 18 18 3C
+  391:	  0412	00 38 44 04	TB_02:		DB	000H,038H,044H,004H,008H,010H,020H,07CH
+	  0416	08 10 20 7C
+  392:	  041A	00 1C 22 02	TB_03:		DB	000H,01CH,022H,002H,00CH,002H,022H,01CH
+	  041E	0C 02 22 1C
+  393:	  0422	00 0C 14 24	TB_04:		DB	000H,00CH,014H,024H,024H,03EH,004H,004H
+	  0426	24 3E 04 04
+  394:	  042A	00 7C 40 40	TB_05:		DB	000H,07CH,040H,040H,038H,004H,044H,038H
+	  042E	38 04 44 38
+  395:	  0432	00 0C 10 20	TB_06:		DB	000H,00CH,010H,020H,03CH,022H,022H,01CH
+	  0436	3C 22 22 1C
+  396:	  043A	00 7C 04 08	TB_07:		DB	000H,07CH,004H,008H,010H,020H,020H,020H
+	  043E	10 20 20 20
+  397:	  0442	00 1C 22 22	TB_08:		DB	000H,01CH,022H,022H,01CH,022H,022H,01CH
+	  0446	1C 22 22 1C
+  398:	  044A	00 1C 22 22	TB_09:		DB	000H,01CH,022H,022H,01EH,002H,004H,018H
+	  044E	1E 02 04 18
+  399:	  0452	00 1C 22 22	TB_0A:		DB	000H,01CH,022H,022H,022H,03EH,022H,022H
+	  0456	22 3E 22 22
+  400:	  045A	00 3C 22 22	TB_0B:		DB	000H,03CH,022H,022H,03CH,022H,022H,03CH
+	  045E	3C 22 22 3C
+  401:	  0462	00 1C 22 20	TB_0C:		DB	000H,01CH,022H,020H,020H,020H,022H,01CH
+	  0466	20 20 22 1C
+  402:	  046A	00 3C 22 22	TB_0D:		DB	000H,03CH,022H,022H,022H,022H,022H,03CH
+
+ASEM-51 V1.3                                         Copyright (c) 2002 by W.W. Heinz                                         PAGE 9
+
+
+
+ Line  I  Addr  Code            Source
+
+	  046E	22 22 22 3C
+  403:	  0472	00 3E 22 20	TB_0E:		DB	000H,03EH,022H,020H,038H,020H,022H,03EH
+	  0476	38 20 22 3E
+  404:	  047A	00 3E 20 20	TB_0F:		DB	000H,03EH,020H,020H,038H,020H,020H,020H
+	  047E	38 20 20 20
+  405:
+  406:						END
+
+
+
+
+
+                     register banks used:  ---
+
+                     no errors
+
+
+
+
+ASEM-51 V1.3                                        Copyright (c) 2002 by W.W. Heinz                                         PAGE 10
+
+
+
+
+
+	       L I S T   O F   S Y M B O L S
+	       =============================
+
+
+SYMBOL				  TYPE     VALUE	LINE
+------------------------------------------------------------
+??ASEM_51			  NUMBER    8051
+??VERSION			  NUMBER    0130
+AC				  BIT	      D6
+ACC				  DATA	      E0
+B				  DATA	      F0
+CY				  BIT	      D7
+DATABUFFER			  NUMBER    0020	   7
+DELAY_100M			  CODE	    0242	 191
+DELAY_1SEC			  CODE	    022D	 179
+DELAY_250M			  CODE	    023B	 187
+DELAY_2SEC			  CODE	    0226	 175
+DELAY_4SEC			  CODE	    021F	 171
+DELAY_500M			  CODE	    0234	 183
+DELAY_50M			  CODE	    0249	 195
+DPH				  DATA	      83
+DPL				  DATA	      82
+EA				  BIT	      AF
+ES				  BIT	      AC
+ET0				  BIT	      A9
+ET1				  BIT	      AB
+EX0				  BIT	      A8
+EX1				  BIT	      AA
+EXTI0				  CODE	    0003
+EXTI1				  CODE	    0013
+F0				  BIT	      D5
+HEXASC_TAB			  CODE	    02A0	 243
+IE				  DATA	      A8
+IE0				  BIT	      89
+IE1				  BIT	      8B
+INITIAL_MAX7219			  CODE	    033A	 327
+INITIAL_SERIAL			  CODE	    0268	 214
+INT0				  BIT	      B2
+INT1				  BIT	      B3
+IP				  DATA	      B8
+IT0				  BIT	      88
+IT1				  BIT	      8A
+MAIN_LOOP			  CODE	    010E	  25
+MAX7219_DISPLAY_TEST		  CODE	    0359	 340
+MXBOARD_CLK			  NUMBER    0092	  11
+MXBOARD_CS			  NUMBER    0091	  10
+MXBOARD_DIN			  NUMBER    0090	   9
+MYDELAY				  CODE	    03EC	 379
+OV				  BIT	      D2
+P				  BIT	      D0
+P0				  DATA	      80
+P1				  DATA	      90
+P2				  DATA	      A0
+P3				  DATA	      B0
+PCON				  DATA	      87
+PORTO_LEDGREEN			  NUMBER    00B7	  13
+
+ASEM-51 V1.3                                        Copyright (c) 2002 by W.W. Heinz                                         PAGE 11
+
+
+
+SYMBOL				  TYPE     VALUE	LINE
+------------------------------------------------------------
+PORTSEG				  NUMBER    00A0	   5
+PS				  BIT	      BC
+PSW				  DATA	      D0
+PT0				  BIT	      B9
+PT1				  BIT	      BB
+PX0				  BIT	      B8
+PX1				  BIT	      BA
+RB8				  BIT	      9A
+RCAP2H				  NUMBER    00CB	   4
+RCAP2L				  NUMBER    00CA	   3
+RD				  BIT	      B7
+REN				  BIT	      9C
+RESET				  CODE	    0000
+RI				  BIT	      98
+RS0				  BIT	      D3
+RS1				  BIT	      D4
+RXD				  BIT	      B0
+RX_BYTE				  CODE	    02D8	 277
+S0				  CODE	    0112	  29
+S1				  CODE	    0122	  37
+S2				  CODE	    0132	  45
+S3				  CODE	    0142	  53
+S4				  CODE	    0152	  61
+S5				  CODE	    0162	  69
+S6				  CODE	    0172	  77
+S7				  CODE	    0182	  85
+S8				  CODE	    0192	  93
+S9				  CODE	    01A2	 101
+SA				  CODE	    01B2	 109
+SB				  CODE	    01C2	 117
+SBB				  CODE	    03FA	 388
+SBUF				  DATA	      99
+SC				  CODE	    01D2	 125
+SCON				  DATA	      98
+SD				  CODE	    01E2	 133
+SE				  CODE	    01F2	 141
+SEND_1HEX			  CODE	    0282	 228
+SEND_2HEX			  CODE	    027A	 224
+SEND_2_DOT			  CODE	    02E6	 286
+SEND_ASCII			  CODE	    0290	 235
+SEND_CLRSCR			  CODE	    02B9	 253
+SEND_DPTR2MAX7219		  CODE	    0369	 348
+SEND_LINEFEED			  CODE	    02B0	 246
+SEND_TABLE			  CODE	    02BE	 258
+SF				  CODE	    0202	 149
+SINT				  CODE	    0023
+SM0				  BIT	      9F
+SM1				  BIT	      9E
+SM2				  BIT	      9D
+SOO				  CODE	    0212	 157
+SP				  DATA	      81
+T0				  BIT	      B4
+T1				  BIT	      B5
+T2CON				  NUMBER    00C8	   2
+TB8				  BIT	      9B
+TB_00				  CODE	    0402	 389
+
+ASEM-51 V1.3                                        Copyright (c) 2002 by W.W. Heinz                                         PAGE 12
+
+
+
+SYMBOL				  TYPE     VALUE	LINE
+------------------------------------------------------------
+TB_01				  CODE	    040A	 390
+TB_02				  CODE	    0412	 391
+TB_03				  CODE	    041A	 392
+TB_04				  CODE	    0422	 393
+TB_05				  CODE	    042A	 394
+TB_06				  CODE	    0432	 395
+TB_07				  CODE	    043A	 396
+TB_08				  CODE	    0442	 397
+TB_09				  CODE	    044A	 398
+TB_0A				  CODE	    0452	 399
+TB_0B				  CODE	    045A	 400
+TB_0C				  CODE	    0462	 401
+TB_0D				  CODE	    046A	 402
+TB_0E				  CODE	    0472	 403
+TB_0F				  CODE	    047A	 404
+TCON				  DATA	      88
+TF0				  BIT	      8D
+TF1				  BIT	      8F
+TH0				  DATA	      8C
+TH1				  DATA	      8D
+TI				  BIT	      99
+TIMER0				  CODE	    000B
+TIMER1				  CODE	    001B
+TL0				  DATA	      8A
+TL1				  DATA	      8B
+TMOD				  DATA	      89
+TR0				  BIT	      8C
+TR1				  BIT	      8E
+TXD				  BIT	      B1
+TX_BYTE				  CODE	    02C8	 267
+WR				  BIT	      B6
+_DELAY_050M			  CODE	    0254	 202
+_DELAY_250U			  CODE	    0257	 203
+_DELAY_50M			  CODE	    0250	 200
+_DLY00				  CODE	    03F1	 382
+_READBUFFER			  CODE	    02EA	 289
+_SEND_2_MAX7219			  CODE	    02F1	 297
+_SEND_DPTR2MAX7219_8BIT		  CODE	    03B0	 365
+_SHIFTBIT_DPTR2MAX7219		  CODE	    03B2	 367
+_X_SEND_TAB			  CODE	    02C7	 264
